@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 const userModelSchema = new mongoose.Schema(
     {
         name: {
@@ -17,6 +18,7 @@ const userModelSchema = new mongoose.Schema(
         role: {
           type: String,
           required: true,
+          enum: ['admin' , 'user']
         },
         bio : {
           type : String,
@@ -29,6 +31,10 @@ const userModelSchema = new mongoose.Schema(
         image : {
           type : String,
           required : false
+        },
+        photourl: {
+          type: String,
+          required: false,
         }
       },
       { timestamps: true }

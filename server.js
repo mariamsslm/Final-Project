@@ -4,7 +4,7 @@ import cors from "cors";
 import connect from "./config/config.js";
 import cookieParser from "cookie-parser";
 import postRoute from './routes/postRoute.js'
-import  writtingRoute from './routes/writtingRoute.js' 
+// import  writtingRoute from './routes/writtingRoute.js' 
 import likeRoute from './routes/likeRoute.js'
 import  userRoute from './routes/userRoute.js'
 
@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.use(cors(corsOption));
 
 app.use('/post',postRoute)
-app.use('/writting',writtingRoute)
+// app.use('/writting',writtingRoute)
 app.use('/like',likeRoute)
 app.use('/user', userRoute)
 

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const validTypes = ["photographs", "drawing"]
+const validTypes = ["photographs", "drawings","writings"]
 
 const postModelSchema = new mongoose.Schema(
     {
@@ -14,7 +14,7 @@ const postModelSchema = new mongoose.Schema(
         },
         image: {
             type: String,
-            required: true
+            required: false
         },
         userID: {
             type: mongoose.Schema.Types.ObjectId,

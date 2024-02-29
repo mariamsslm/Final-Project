@@ -12,6 +12,9 @@ import {
     updateDrawingById,
     deleteDrawingById,
     getLastPosts,
+    getAllWritings,
+    getWritingById,
+    deleteAllDrawings
 
 } from '../controllers/postController.js'
 
@@ -26,8 +29,12 @@ postRoute.get('/getdraw', getAllDrawings)
 postRoute.get('/getdrawid/:id', getDrawingById)
 postRoute.get('/getallphoto', getAllPhotographs)
 postRoute.get('/getphotoid/:id', getPhotographById)
+postRoute.get('/getallWritings',getAllWritings)
+postRoute.get('/getWrtingbyId/:id',getWritingById)
 postRoute.put('/update/:id',upload.single("image"), updateDrawingById)
 postRoute.delete('/delete/:id', deleteDrawingById)
+postRoute.delete('/deleteAll', deleteAllDrawings)
+
 postRoute.get('/getlastest', getLastPosts)
 
 export default postRoute;

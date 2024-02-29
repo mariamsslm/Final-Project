@@ -3,24 +3,30 @@ import postSchema from "../models/post.js";
 
 
 //add post
-export const addPost =async(req,res)=>{
+export const addPost = async (req, res) => {
   try {
-    const { description, type, userID } = req.body;
-    const image = req.file.filename
-        const newPost = new postSchema({
-        description,
-        type,
-        image,
-        userID
+    const { type, userID, description } = req.body;
+    let image = null;
+    if (req.file) {
+      image = req.file.filename;
+    }
+
+    const newPost = new postSchema({
+      type,
+      image,
+      userID,
+      description 
     });
     await newPost.save();
 
     res.status(201).json(newPost);
-} catch (error) {
+  } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to create post" });
-}
+  }
 };
+
+
   
 
 
@@ -59,7 +65,7 @@ export const addDrawing = async (req, res) => {
   try {
     const { description, userID } = req.body;
     const image = req.file.filename
-    const newPost = new postSchema({ description, type: "drawing", image, userID });
+    const newPost = new postSchema({ description, type: "drawings", image, userID });
     await newPost.save();
     res.status(201).json({ data: newPost });
   } catch (error) {
@@ -73,7 +79,7 @@ export const addDrawing = async (req, res) => {
 // For getting all drawings
 export const getAllDrawings = async (req, res) => {
   try {
-    const drawings = await postSchema.find({ type: "drawing" }).populate('userID');
+    const drawings = await postSchema.find({ type: "drawings" }).populate('userID');
     res.status(200).json({data: drawings});
   } catch (error) {
     console.error(error);
@@ -85,7 +91,7 @@ export const getAllDrawings = async (req, res) => {
 export const getDrawingById = async (req, res) => {
   const id = req.params.id;
   try {
-    const drawing = await postSchema.findOne({ _id: id, type: "drawing" }).populate('userID');
+    const drawing = await postSchema.findOne({ _id: id, type: "drawings" }).populate('userID');
     if (!drawing) {
       return res.status(404).json({ error: "Drawing not found" });
     }
@@ -95,6 +101,38 @@ export const getDrawingById = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+
+//gettings all Wrtings
+export const getAllWritings = async (req, res) => {
+  try {
+    const writings = await postSchema.find({ type: "writings" }).populate('userID');
+    res.status(200).json({data:writings});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+//get single writings
+export const getWritingById = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const writings = await postSchema.findOne({ _id: id, type: "writings" }).populate('userID');
+    if (!writings) {
+      return res.status(404).json({ error: "writing not found" });
+    }
+    res.status(200).json({data:writings});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+
+
 
 // For getting all photographs
 export const getAllPhotographs = async (req, res) => {
@@ -152,6 +190,19 @@ export const deleteDrawingById = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+
+//delete all posts
+export const deleteAllDrawings = async (req, res) => {
+  try {
+    await postSchema.deleteMany({});
+    res.status(200).json({ message: "All posts deleted successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 
 //get last post
 

@@ -171,7 +171,7 @@ export const gsignup = async (req, res) => {
 export const getAll = async (req, res) => {
   try {
     const allUsers = await userSchema.find();
-    return res.status(200).json(allUsers);
+    return res.status(200).json({ Users: allUsers });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "cannot fetch users" });
@@ -186,7 +186,7 @@ export const getUserById = async (req, res) => {
     const findData = await userSchema.findOne({ _id: id })
     if (!findData)
       res.status(404).json('No User Found')
-    res.status(200).json(findData)
+    res.status(200).json({data:findData})
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Server error" });
@@ -242,6 +242,19 @@ export const deleteUserById = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+
+//delete all users
+export const deleteAllUsers = async (req, res) => {
+  try {
+    await userSchema.deleteMany({});
+    res.status(200).json({ message: "All users deleted successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 
 
 

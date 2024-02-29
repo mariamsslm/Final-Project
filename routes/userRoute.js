@@ -10,7 +10,8 @@ import {
     updateUserRole,
     logout,
     getOne,
-    updateUserProfile
+    updateUserProfile,
+    deleteAllUsers
 } from '../controllers/userController.js'
 
 
@@ -18,13 +19,17 @@ const userRoute = express.Router()
 
 userRoute.post('/signup',upload.single("image"), signup)
 userRoute.post('/login', login)
+
 userRoute.get('/getall', getAll)
 userRoute.get('/get/:id', getUserById)
 userRoute.get('/getone', getOne)
 
 userRoute.delete('/delete/:id', deleteUserById)
+userRoute.delete('/deleteAll', deleteAllUsers)
+
 userRoute.put('/updateProfile',upload.single("image"), authorized,updateUserProfile)
 userRoute.put('/updateUserRole', authorized,updateUserRole)
+
 userRoute.get('/logout',authorized, logout)
 
 

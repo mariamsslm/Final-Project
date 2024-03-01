@@ -194,6 +194,7 @@ export const getLatestUsers = async (req, res) => {
 //get user by id 
 export const getUserById = async (req, res) => {
   const id = req.params.id;
+  console.log(id)
   try {
     const findData = await userSchema.findOne({ _id: id })
     if (!findData)

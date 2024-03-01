@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const validTypes = ["photographs", "drawings","writings"]
 
 const postModelSchema = new mongoose.Schema(
-    {
+    { 
         description: {
             type: String,
             required: false

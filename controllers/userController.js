@@ -178,6 +178,18 @@ export const getAll = async (req, res) => {
   }
 };
 
+// get lateste users
+export const getLatestUsers = async (req, res) => {
+  try {
+    const latestUsers = await userSchema.find().sort({ createdAt: -1 }).limit(3);
+    return res.status(200).json({ latestUsers });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Unable to fetch latest users" });
+  }
+};
+
+
 
 //get user by id 
 export const getUserById = async (req, res) => {

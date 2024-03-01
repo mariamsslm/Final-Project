@@ -31,20 +31,35 @@ export const addPost = async (req, res) => {
 
 
 //  get all post
+// export const getAllPost = async (req, res) => {
+//   try {
+//     const getPost = await postSchema.find().populate('userID');
+//     if (!getPost) {
+//       res.status(404).json("Post Not Found")
+//     }
+//     else {
+//       res.status(200).json({ message: "all posts", data: getPost })
+//     }
+//   } catch (error) {
+//     console.error(error.message)
+//     res.status(500).send('Server Error')
+//   }
+// }
+
+/// get by date
 export const getAllPost = async (req, res) => {
   try {
-    const getPost = await postSchema.find().populate('userID');
-    if (!getPost) {
-      res.status(404).json("Post Not Found")
-    }
-    else {
-      res.status(200).json({ message: "all posts", data: getPost })
+    const getPost = await postSchema.find().populate('userID').sort({ createdAt: -1 });
+    if (!getPost || getPost.length === 0) {
+      return res.status(404).json({ message: "No posts found" });
+    } else {
+      return res.status(200).json({ message: "All posts", data: getPost });
     }
   } catch (error) {
-    console.error(error.message)
-    res.status(500).send('Server Error')
+    console.error(error.message);
+    return res.status(500).send('Server Error');
   }
-}
+};
 
 //add photographs
 export const addPhotograph = async (req, res) => {

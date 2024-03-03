@@ -77,11 +77,37 @@ export const unlikePost = async (req, res) => {
 
 
 
+//nb of like 
+export const getLikesByPostId = async (req, res) => {
+  try {
+    const id = req.params.id; // Extract post ID from request parameters
+
+    // Find the post by ID
+    const post = await postSchema.findById(id);
+
+    // Check if the post exists
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    // Get the number of likes for the post
+    const numberOfLikes = post.likes.length;
+
+    // Return the number of likes for the post
+    return res.status(200).json({ postId: post._id, numberOfLikes });
+  } catch (error) {
+    console.error("Error getting number of likes for post:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+
 
 
 
 //number of like for each post
-export const getLikesByPostId = async (req, res) => {
+export const getLikesByPost= async (req, res) => {
   try {
     // Get all posts
     const posts = await postSchema.find();

@@ -429,7 +429,7 @@ export const logout = async (req, res) => {
 export const updateUserProfile = async (req, res) => {
   try {
     const loggedInUserId = req.user.id;
-    const role = req.user.role;
+    const role = req.user.role
 
     // Check if the logged-in user is a regular user
     if (role === 'user') {

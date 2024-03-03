@@ -14,7 +14,9 @@ import {
     getLastPosts,
     getAllWritings,
     getWritingById,
-    deleteAllDrawings
+    deleteAllDrawings,
+    getPostById,
+    getUserPosts
 
 } from '../controllers/postController.js'
 
@@ -23,6 +25,10 @@ const postRoute = express.Router()
 
 postRoute.post('/add', upload.single("image"), addPost)
 postRoute.get('/getall', getAllPost)
+postRoute.get('/getbyId/:id', getPostById)
+postRoute.get('/getbyUserId/:id', getUserPosts)
+
+
 postRoute.post('/addphoto',upload.single("image"), addPhotograph)
 postRoute.post('/adddraw', upload.single("image"),addDrawing)
 postRoute.get('/getdraw', getAllDrawings)

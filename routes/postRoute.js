@@ -1,5 +1,6 @@
 import express from "express"
 import upload from "../middlewares/multer.js"
+import { authorized } from "../middlewares/auth.js"
 import {
     addPost,
     getAllPost,
@@ -23,7 +24,7 @@ import {
 
 const postRoute = express.Router()
 
-postRoute.post('/add', upload.single("image"), addPost)
+postRoute.post('/add', authorized,upload.single("image"),addPost)
 postRoute.get('/getall', getAllPost)
 postRoute.get('/getbyId/:id', getPostById)
 postRoute.get('/getbyUserId/:id', getUserPosts)

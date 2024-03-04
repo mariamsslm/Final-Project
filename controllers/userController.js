@@ -433,7 +433,7 @@ export const updateUserProfile = async (req, res) => {
 
     // Check if the logged-in user is a regular user
     if (role === 'user') {
-      const { id, name, email, password, bio, phone } = req.body;
+      const {  name, email,password, bio, phone } = req.body;
       const image = req.file.filename
 
       // Check if the user is trying to update their own profile

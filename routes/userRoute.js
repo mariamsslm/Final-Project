@@ -12,7 +12,8 @@ import {
     getOne,
     updateUserProfile,
     deleteAllUsers,
-    getLatestUsers
+    getLatestUsers,
+    deleteUserAccount
 } from '../controllers/userController.js'
 
 
@@ -28,12 +29,13 @@ userRoute.get('/getlatest', getLatestUsers)
 
 
 userRoute.delete('/delete/:id', deleteUserById)
+userRoute.delete('/deleteUserAccount/:id',authorized, deleteUserAccount)
 userRoute.delete('/deleteAll', deleteAllUsers)
 
-userRoute.put('/updateProfile',upload.single("image"), authorized,updateUserProfile)
+userRoute.put('/updateProfile/:id', authorized,upload.single("image"),updateUserProfile)
 userRoute.put('/updateUserRole', authorized,updateUserRole)
 
-userRoute.get('/logout',authorized, logout)
+userRoute.post('/logout',authorized, logout)
 
 
 export default userRoute;

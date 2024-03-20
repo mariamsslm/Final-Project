@@ -260,3 +260,78 @@ export const getUserPosts = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+
+
+//update users update own posts
+export const updatePostById = async (req, res) => {
+  const id = req.params.id;
+  const { description } = req.body;
+  const image = req.file.filename;
+  const userId = req.user.id; 
+  
+  try {
+  
+    const drawing = await postSchema.findById(id);
+    console.log(drawing)
+    if (!drawing) {
+      return res.status(404).json({ error: "Post not found" });
+      
+    }
+
+    const drawingUserId = drawing.userID.toString(); 
+const requestUserId = userId.toString(); 
+
+if (drawingUserId !== requestUserId) {
+  return res.status(403).json({ error: "You are not authorized to update this drawing" });
+}
+
+  
+    const updatedPost = await postSchema.findByIdAndUpdate(
+      { _id: id },
+      { description, image },
+      { new: true }
+    );
+    
+    res.status(200).json({ message: "Post updated successfully", data: updatedPost });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+
+
+
+//delete users delete own posts
+
+export const deleteOwnPost = async (req, res) => {
+  const id = req.params.id;
+  const userId = req.user.id;
+  
+  try {
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized access" });
+    }
+
+    // Find the post by id
+    const post = await postSchema.findById(id);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    // Check if the authenticated user is the owner of the post
+    if (post.userID.toString() !== userId.toString()) {
+      return res.status(403).json({ error: "You are not authorized to delete this post" });
+    }
+
+    // Delete the post
+    await postSchema.findByIdAndDelete(id);
+    res.status(200).json({ message: "Post deleted successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+

@@ -419,35 +419,49 @@ export const deleteAllUsers = async (req, res) => {
 
 //logout 
 export const logout = async (req, res) => {
-  res.clearCookie('userToken'); 
-  res.status(200).json({ message: 'Logged out successfully' });
+  try {
+   
+    res.clearCookie('userToken'); 
+
+    res.status(200).json({ message: 'Logged out successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
 };
+
 
 
 
 // update user profile
 export const updateUserProfile = async (req, res) => {
+  const loggedInUserId = req.user.id;
+  const roleId = req.user.role;
+  const id = req.params.id;
+
   try {
-    const loggedInUserId = req.user.id;
-    const role = req.user.role
+    // Check if the user is authenticated
+    if (!loggedInUserId) {
+      return res.status(401).json({ error: "Unauthorized access" });
+    }
+
+    // Find the user by ID
+    const user = await userSchema.findById(id);
+
+    // Check if the user exists
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Check if the logged-in user is authorized to update the profile
+    if (loggedInUserId.toString() !== id.toString()) {
+      return res.status(403).json({ error: "You are not authorized to update this user's profile" });
+    }
 
     // Check if the logged-in user is a regular user
-    if (role === 'user') {
-      const {  name, email,password, bio, phone } = req.body;
-      const image = req.file.filename
-
-      // Check if the user is trying to update their own profile
-      if (id !== loggedInUserId) {
-        return res.status(403).json({ error: "You are not allowed to update other users' profiles." });
-      }
-
-      // Find the user by ID
-      let user = await userSchema.findById(id);
-
-      // Check if the user exists
-      if (!user) {
-        return res.status(404).json({ error: "User not found." });
-      }
+    if (roleId === 'user') {
+      const { name, email, password, bio, phone } = req.body;
+      const image = req.file ? req.file.filename : null;
 
       // Update user attributes
       if (name) user.name = name;
@@ -461,7 +475,7 @@ export const updateUserProfile = async (req, res) => {
       await user.save();
 
       // Return success message with updated user
-      res.status(200).json({ message: "User profile updated successfully.", user });
+      return res.status(200).json({ message: "User profile updated successfully.", user });
     } else {
       // If the logged-in user is not a regular user, return a 403 Forbidden error
       return res.status(403).json({ error: "Only regular users are allowed to update their profiles." });
@@ -471,6 +485,7 @@ export const updateUserProfile = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
 
 
 
@@ -514,6 +529,39 @@ export const updateUserRole = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+
+//user delete own account
+export const deleteUserAccount= async (req, res) => {
+  const userId = req.user.id;
+  const id = req.params.id;
+
+  try {
+    // Check if the user is authenticated
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized access" });
+    }
+
+    // Find the user by ID
+    const user = await userSchema.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    // Check if the authenticated user is the owner of the account
+    if (user._id.toString() !== userId.toString()) {
+      return res.status(403).json({ error: "You are not authorized to delete this user." });
+    }
+
+    // Delete the user
+    await userSchema.deleteOne({ _id: id });
+    res.status(200).json({ message: "User deleted successfully." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 
 
 

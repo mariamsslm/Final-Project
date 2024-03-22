@@ -17,13 +17,14 @@ app.use(express.static("public"));
 app.use("/images", express.static("images"));
 
 const corsOption = {
-    origin: ["http://localhost:3000", process.env.FRONTEND_ORIGIN],
+    origin: "*",
     credentials: true,
     optionsSuccessStatus: 200,
 };
 
-app.use(cookieParser());
+
 app.use(cors(corsOption));
+app.use(cookieParser());
 
 app.use('/post',postRoute)
 // app.use('/writting',writtingRoute)

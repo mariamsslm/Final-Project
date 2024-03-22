@@ -23,7 +23,10 @@ app.use("/images", express.static("images"));
 // };
 
 
-app.use(cors());
+app.use(cors({
+    origin: true,
+    credentials: true
+  }));
 app.use(cookieParser());
 
 app.use('/post',postRoute)

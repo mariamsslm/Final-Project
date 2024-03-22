@@ -42,7 +42,7 @@ postRoute.get('/getallWritings',getAllWritings)
 postRoute.get('/getWrtingbyId/:id',getWritingById)
 
 postRoute.put('/update/:id',upload.single("image"), updateDrawingById)
-postRoute.put('/:id',authorized,upload.single("image"), updatePostById)
+postRoute.put('/post/:id',authorized,upload.single("image"), updatePostById)
 
 
 postRoute.delete('/delete/:id', deleteDrawingById)

@@ -16,14 +16,14 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use("/images", express.static("images"));
 
-const corsOption = {
-    origin: "*",
-    credentials: true,
-    optionsSuccessStatus: 200,
-};
+// const corsOption = {
+//     origin: "*",
+//     credentials: true,
+//     optionsSuccessStatus: 200,
+// };
 
 
-app.use(cors(corsOption));
+app.use(cors());
 app.use(cookieParser());
 
 app.use('/post',postRoute)

@@ -1,4 +1,5 @@
-import userSchema from "../models/user.js";
+import userSchema  from "../models/user.js";
+import postSchema from "../models/post.js";
 import bcrypt from 'bcrypt'
 import { verifyToken, createToken } from "../utils/jwt.js";
 
@@ -244,12 +245,16 @@ export const getOne = async (req, res) => {
 export const deleteUserById = async (req, res) => {
   const id = req.params.id;
   try {
+    
     const user = await userSchema.findOne({ _id: id });
     if (!user) {
       return res.status(404).json({ error: "User not found." });
     }
     await userSchema.deleteOne({ _id: id });
-    res.status(200).json({ message: "User deleted successfully." });
+    await postSchema.deleteMany({ userID: id });
+
+  
+    res.status(200).json({ message: "User and associated posts deleted successfully." });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
@@ -553,7 +558,7 @@ export const deleteUserAccount= async (req, res) => {
       return res.status(403).json({ error: "You are not authorized to delete this user." });
     }
 
-    // Delete the user
+    await postSchema.deleteMany({ userID: id });
     await userSchema.deleteOne({ _id: id });
     res.status(200).json({ message: "User deleted successfully." });
   } catch (err) {
@@ -561,6 +566,52 @@ export const deleteUserAccount= async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+
+//update user for admin
+
+ export const updateInfoByAdmin = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const user = await userSchema.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    const { name, email, phone, bio, role } = req.body;
+
+    if (name) {
+      user.name = name;
+    }
+
+    if (email) {
+      user.email = email;
+    }
+
+    if (phone) {
+      user.phone = phone;
+    }
+
+    if (bio) {
+      user.bio = bio;
+    }
+
+    if (role) {
+      user.role = role;
+    }
+
+    await user.save();
+
+    res.status(200).json({ message: "User information updated successfully.", user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+}; 
+
+ 
 
 
 

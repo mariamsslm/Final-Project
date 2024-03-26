@@ -25,8 +25,9 @@ import {
 
 
 const postRoute = express.Router()
-
+//user
 postRoute.post('/add', authorized,upload.single("image"),addPost)
+//admin
 postRoute.get('/getall', getAllPost)
 postRoute.get('/getbyId/:id', getPostById)
 postRoute.get('/getbyUserId/:id', getUserPosts)
@@ -40,12 +41,14 @@ postRoute.get('/getallphoto', getAllPhotographs)
 postRoute.get('/getphotoid/:id', getPhotographById)
 postRoute.get('/getallWritings',getAllWritings)
 postRoute.get('/getWrtingbyId/:id',getWritingById)
+//admin
+postRoute.put('/update/:id',upload.single("image"),updateDrawingById)
+//user
+postRoute.put('/post/:id',authorized,upload.single("image"),updatePostById)
 
-postRoute.put('/update/:id',upload.single("image"), updateDrawingById)
-postRoute.put('/post/:id',authorized,upload.single("image"), updatePostById)
-
-
+//admin
 postRoute.delete('/delete/:id', deleteDrawingById)
+//user
 postRoute.delete('/deleteUserPost/:id', authorized,deleteOwnPost)
 postRoute.delete('/deleteAll', deleteAllDrawings)
 

@@ -29,13 +29,15 @@ userRoute.get('/getone', getOne)
 userRoute.get('/getlatest', getLatestUsers)
 
 
-userRoute.delete('/delete/:id', deleteUserById)
+
 userRoute.delete('/deleteUserAccount/:id',authorized, deleteUserAccount)
-userRoute.delete('/deleteAll', deleteAllUsers)
 //user
 userRoute.put('/updateProfile/:id', authorized,upload.single("image"),updateUserProfile)
 //admin
 userRoute.put('/updateByAdmin/:id',upload.single("image"),updateInfoByAdmin)
+userRoute.delete('/delete/:id', deleteUserById)
+userRoute.delete('/deleteAll', deleteAllUsers)
+
 
 userRoute.put('/updateUserRole', authorized,updateUserRole)
 

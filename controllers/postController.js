@@ -186,48 +186,6 @@ export const getPhotographById = async (req, res) => {
 };
 
 
-// For updating a drawing by ID
-export const updateDrawingById = async (req, res) => {
-  const id = req.params.id;
-  const { description } = req.body;
-  const image = req.file.filename
-  try {
-    const updatedDrawing = await postSchema.findByIdAndUpdate(
-      { _id: id },
-      { description, image },
-      { new: true }
-    );
-    res.status(200).json({ message: "post update successfuly", data: updatedDrawing });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server error" });
-  }
-};
-
-// For deleting a drawing by ID
-export const deleteDrawingById = async (req, res) => {
-  const id = req.params.id;
-  try {
-    await postSchema.findByIdAndDelete({ _id: id });
-    res.status(200).json({ message: "post deleted successfully." });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server error" });
-  }
-};
-
-
-//delete all posts
-export const deleteAllDrawings = async (req, res) => {
-  try {
-    await postSchema.deleteMany({});
-    res.status(200).json({ message: "All posts deleted successfully." });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server error" });
-  }
-};
-
 
 //get last post
 
@@ -334,4 +292,116 @@ export const deleteOwnPost = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+
+//for admin
+// For deleting a post by ID
+export const deleteDrawingById = async (req, res) => {
+  const id = req.params.id;
+  try {
+    await postSchema.findByIdAndDelete({ _id: id });
+    res.status(200).json({ message: "post deleted successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+//delete all posts
+export const deleteAllDrawings = async (req, res) => {
+  try {
+    await postSchema.deleteMany({});
+    res.status(200).json({ message: "All posts deleted successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// For updating a drawing by ID
+export const updateDrawingById = async (req, res) => {
+  const id = req.params.id;
+  const { description } = req.body;
+  const image = req.file.filename
+  try {
+    const updatedDrawing = await postSchema.findByIdAndUpdate(
+      { _id: id },
+      { description, image },
+      { new: true }
+    );
+    res.status(200).json({ message: "post update successfuly", data: updatedDrawing });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+//add post
+export const addPostAmin = async (req, res) => {
+  
+  try {
+    const {userId , type, description } = req.body;
+
+    let image = null;
+    if (req.file) {
+      image = req.file.filename;
+    }
+
+    // Assuming postSchema is defined elsewhere and imported
+    const newPost = new postSchema({
+      type,
+      image,
+      description,
+      userID : userId
+    });
+
+    // Assuming postSchema.save() returns a promise
+    await newPost.save();
+    // Sending back the created post object as a response
+    res.status(201).json(newPost);
+  } catch (error) {
+    // Logging the error
+    console.error(error);
+    // Sending a more descriptive error message
+    res.status(500).json({ message: "Failed to create post", error: error.message });
+  }
+};
+
+
+
+//get images
+export const getAllPostImages = async (req, res) => {
+  try {
+    const postImages = await postSchema.find({ image: { $ne: null } }, { image: 1, _id: 0 }).sort({ createdAt: -1 });
+    if (!postImages || postImages.length === 0) {
+      return res.status(404).json({ message: "No post images found" });
+    } else {
+      return res.status(200).json({ message: "All post images", data: postImages });
+    }
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).send('Server Error');
+  }
+};
+
+//get latest images
+export const getLastThreePostImages = async (req, res) => {
+  try {
+    const lastThreePostImages = await postSchema
+      .find({ image: { $ne: null } }, { image: 1, _id: 0 })
+      .sort({ createdAt: -1 })
+      .limit(3);
+
+    if (!lastThreePostImages || lastThreePostImages.length === 0) {
+      return res.status(404).json({ message: "No post images found" });
+    } else {
+      return res.status(200).json({ message: "Last three post images", data: lastThreePostImages });
+    }
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).send('Server Error');
+  }
+};
+
 

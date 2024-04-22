@@ -496,7 +496,7 @@ export const updateUserProfile = async (req, res) => {
 
 
 
-//update role of user to admin or inverse  *********
+//update role of user to admin or 
 export const updateUserRole = async (req, res) => {
   try {
     const loggedInUserId = req.user.id;
